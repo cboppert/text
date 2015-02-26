@@ -10,7 +10,7 @@ struct bst_node_t
    struct bst_node_t *right;
 };
 
-struct bst_node_t *create_text();
+struct bst_node_t *create_text(void);
 
 int length_text( struct bst_node_t *txt );
 
@@ -23,5 +23,9 @@ char *set_line( struct bst_node_t *txt, int index, char * new_line );
 void insert_line( struct bst_node_t *txt, int index, char * new_line );
 
 char *delete_line( struct bst_node_t *txt, int index );
+
+struct bst_node_t *get_node(void);
+
+int is_empty( struct bst_node_t *tree);
 
 #endif // BST_H_
