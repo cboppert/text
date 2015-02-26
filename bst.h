@@ -1,23 +1,27 @@
 #ifndef BST_H_
 #define BST_H_
 
-typedef struct text_t
+struct bst_node_t
 {
-   int *length;
-} TEXT_t *TEXT_p_t;
+   int key;
+   int length;
 
-TEXT_p_t create_text();
+   struct bst_node_t *left;
+   struct bst_node_t *right;
+};
 
-int length_text( TEXT_p_t txt );
+struct bst_node_t *create_text();
 
-char * get_line( TEXT_p_t txt, int index);
+int length_text( struct bst_node_t *txt );
 
-void append_line( TEXT_p_t txt, char * new_line);
+char *get_line( struct bst_node_t *txt, int index );
 
-char * set_line( TEXT_p_t txt, int index, char * new_line);
+void append_line( struct bst_node_t *txt, char * new_line );
 
-void insert_line( TEXT_p_t txt, int index, char * new_line);
+char *set_line( struct bst_node_t *txt, int index, char * new_line );
 
-char * delete_line( TEXT_p_t txt, int index);
+void insert_line( struct bst_node_t *txt, int index, char * new_line );
+
+char *delete_line( struct bst_node_t *txt, int index );
 
 #endif // BST_H_
