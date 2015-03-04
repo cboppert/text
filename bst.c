@@ -22,11 +22,6 @@ text_t *create_text(void)
    return txt;
 }
 
-int length_text( text_t *txt )
-{
-   return txt->length;
-}
-
 char * get_line( text_t *txt, int index )
 {
    if ( index < txt->key_l )
@@ -65,7 +60,7 @@ char * get_line( text_t *txt, int index )
 
 void append_line( text_t *txt, char * new_line )
 {
-   txt->length += 1;
+
 }
 
 char * set_line( text_t *txt, int index, char * new_line )
@@ -90,7 +85,7 @@ text_t *get_node(void)
    return bst;
 }
 
-int length_text( text_t i*txt )
+int length_text( text_t *txt )
 {
    if ( txt->right == NULL )
    {
