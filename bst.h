@@ -1,31 +1,38 @@
 #ifndef BST_H_
 #define BST_H_
 
-struct bst_node_t
+typedef struct text
 {
-   int key;
-   int length;
+   int key_l;
+   int key_r;
 
-   struct bst_node_t *left;
-   struct bst_node_t *right;
-};
+   //80 is standard column for programming +1 for end line
+   char line_l[81];
+   char line_r[81];
 
-struct bst_node_t *create_text(void);
+   struct text *left;
+   struct text *middle;
+   struct text *right;
+} text_t;
 
-int length_text( struct bst_node_t *txt );
+text_t *create_text(void);
 
-char *get_line( struct bst_node_t *txt, int index );
+int length_text( text_t *txt );
 
-void append_line( struct bst_node_t *txt, char * new_line );
+char *get_line( text_t *txt, int index );
 
-char *set_line( struct bst_node_t *txt, int index, char * new_line );
+void append_line( text_t *txt, char * new_line );
 
-void insert_line( struct bst_node_t *txt, int index, char * new_line );
+char *set_line( text_t *txt, int index, char * new_line );
 
-char *delete_line( struct bst_node_t *txt, int index );
+void insert_line( text_t *txt, int index, char * new_line );
 
-struct bst_node_t *get_node(void);
+char *delete_line( text_t *txt, int index );
 
-int is_empty( struct bst_node_t *tree);
+text_t *get_node(void);
+
+int is_empty( text_t *txt );
+
+int get_height( text_t *txt );
 
 #endif // BST_H_
