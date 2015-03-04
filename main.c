@@ -1,3 +1,13 @@
+/*
+ * Author: Cody Boppert
+ * Assignment: Homework 1 for Advanced Data Structures
+ * City College of New York
+ * Spring 2015
+ *
+ * call_test_functions are mine
+ *
+ * The rest of main is courtesy of Professor Peter Brass
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include "bst.h"

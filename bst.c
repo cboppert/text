@@ -7,6 +7,10 @@
    root->left not NULL, root->right not NULL, then each points to root of left and right subtrees
 
    All keys in left subtree < root->key, all keys in right subtree > root->key
+
+
+   Algorithms based upon: http://algs4.cs.princeton.edu/33balanced/
+   Princeton's balanced search trees section
 */
 text_t *create_text(void)
 {
