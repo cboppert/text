@@ -8,7 +8,6 @@
 
    All keys in left subtree < root->key, all keys in right subtree > root->key
 
-
    Algorithms based upon: http://algs4.cs.princeton.edu/33balanced/
    Princeton's balanced search trees section
 */
@@ -22,54 +21,64 @@ text_t *create_text(void)
    return txt;
 }
 
-char * get_line( text_t *txt, int index )
+char *get_line( text_t *txt, int index )
 {
-   if ( index < txt->key_l )
+   text_t *bst;
+   bst = search_tree( txt, index );
+
+   if ( bst->key_l == index )
    {
-      return ( txt->left == NULL ) ? NULL : get_line( txt->left, index );
+      return bst->line_l;
    }
 
-   if ( index == txt->key_l )
+   if ( bst->key_r == index )
    {
-      return txt->line_l;
+      return bst->line_r;
    }
 
-   if ( txt->key_r == 0 )
-   {
-      return ( txt->right == NULL ) ? NULL : get_line( txt->right, index );
-   }
-
-   if ( index < txt->key_r )
-   {
-      return ( txt->middle == NULL ) ? NULL : get_line( txt->middle, index );
-   }
-
-   if ( index == txt->key_r )
-   {
-      return txt->line_r;
-   }
-
-   if ( index > txt->key_r )
-   {
-      return ( txt->right == NULL ) ? NULL : get_line( txt->right, index );
-   }
-
-   printf("Your get_line method got somewhere it shouldnt't\n");
    return NULL;
 }
 
-void append_line( text_t *txt, char * new_line )
+void append_line( text_t *txt, char *new_line )
 {
-
+   insert_line( txt, length_text( txt ) + 1, new_line);
 }
 
-char * set_line( text_t *txt, int index, char * new_line )
+char *set_line( text_t *txt, int index, char * new_line )
 {
+   text_t *bst = search_tree( txt, index );
+
+   if ( bst->key_l == index )
+   {
+      char* line = bst->line_l;
+      bst->line_l = new_line;
+      return line;
+   }
+
+   if ( bst->key_r == index )
+   {
+      char* line = bst->line_r;
+      bst->line_r = new_line;
+      return line;
+   }
+
    return NULL;
 }
 
 void insert_line( text_t *txt, int index, char * new_line )
 {
+   text_t *bst = search_tree( txt, index );
+
+   if ( bst->key_l == index )
+   {
+
+   }
+
+   if ( bst->key_r == index )
+   {
+
+   }
+
 
 }
 
@@ -93,6 +102,42 @@ int length_text( text_t *txt )
    }
 
    return length_text( txt->right );
+}
+
+text_t *search_tree( text_t *txt, int index )
+{
+   if ( index < txt->key_l )
+   {
+      return ( txt->left == NULL ) ? txt : search_tree( txt->left, index );
+   }
+
+   if ( index == txt->key_l )
+   {
+      return txt;
+   }
+
+   if ( txt->key_r == 0 )
+   {
+      return ( txt->right == NULL ) ? txt : search_tree( txt->right, index );
+   }
+
+   if ( index < txt->key_r )
+   {
+      return ( txt->middle == NULL ) ? txt : search_tree( txt->middle, index );
+   }
+
+   if ( index == txt->key_r )
+   {
+      return txt;
+   }
+
+   if ( index > txt->key_r )
+   {
+      return ( txt->right == NULL ) ? txt : search_tree( txt->right, index );
+   }
+
+   printf("Your get_line method got somewhere it shouldnt't\n");
+   return NULL;
 }
 
 /* returns 1 for yes and 0 for no */

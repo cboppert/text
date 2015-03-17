@@ -95,13 +95,17 @@ int main()
 
 void call_test_functions(void)
 {
+   printf("Start\n");
+
    text_t *txt;
    txt = create_text();
+   printf("Text created\n");
 
    if ( get_height( txt ) != 0 )
    {
       printf("Test 1: Height of newly created tree should be 0\n"); exit(-1);
    }
+   printf("Text one run\n");
 
    if ( txt->left == NULL )
    {
