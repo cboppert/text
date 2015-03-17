@@ -15,6 +15,11 @@ text_t *create_text(void)
 {
    text_t *txt;
    txt = get_node();
+   txt->line_l = NULL;
+   txt->line_r = NULL;
+   txt->left = NULL;
+   txt->right = NULL;
+   txt->middle = NULL;
    txt->key_l = 0,
    txt->key_r = 0;
 
@@ -69,16 +74,12 @@ void insert_line( text_t *txt, int index, char * new_line )
 {
    text_t *bst = search_tree( txt, index );
 
-   if ( bst->key_l == index )
+   //Empty tree
+   if ( txt->key_l == 0 )
    {
-
+      txt->key_l = index;
+      txt->line_l = new_line;
    }
-
-   if ( bst->key_r == index )
-   {
-
-   }
-
 
 }
 
