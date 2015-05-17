@@ -6,7 +6,6 @@ typedef struct text
    int key_l;
    int key_r;
 
-   //80 is standard column for programming +1 for end line
    char *line_l;
    char *line_r;
 
@@ -14,8 +13,11 @@ typedef struct text
    struct text *middle;
    struct text *right;
 
-   //For inserting into 3 nodes
+   /* For temporary four nodes */
    int key_m;
+   char *line_m;
+   struct text *rightmost;
+
    struct text *parent;
 } text_t;
 

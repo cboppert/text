@@ -15,6 +15,7 @@
 int minimum( int key_a, int key_b, int key_c );
 int maximum( int key_a, int key_b, int key_c );
 int middle( int key_a, int key_b, int key_c );
+int get_max_key( text_t *txt );
 
 text_t *get_node(void);
 text_t *search_tree( text_t *txt, int index );
@@ -26,21 +27,27 @@ void insert_into_three_node_under_two_node( text_t *txt, int index, char *new_li
 void insert_into_three_node_under_three_node( text_t *txt, int index, char *new_line );
 void insert_into_root_with_children( text_t *txt, int index, char *new_line );
 
+text_t *create_four_node( text_t *txt, int index, char *new_line );
+text_t *reset_four_node( text_t *txt );
+
 text_t *create_text(void)
 {
    text_t *txt;
    txt = get_node();
+
    txt->line_l = NULL;
+   txt->line_m = NULL;
    txt->line_r = NULL;
 
-   txt->left = NULL;
-   txt->right = NULL;
-   txt->middle = NULL;
    txt->parent = NULL;
+   txt->left = NULL;
+   txt->middle = NULL;
+   txt->right = NULL;
+   txt->rightmost = NULL;
 
    txt->key_l = 0,
-   txt->key_r = 0;
    txt->key_m = 0;
+   txt->key_r = 0;
 
    return txt;
 }
@@ -198,6 +205,8 @@ void insert_line( text_t *txt, int index, char * new_line )
 /* Equals cases covered before this is called */
 void insert_into_single_three_node( text_t *txt, int index, char *new_line )
 {
+         text_t *four_node = create_four_node( txt, index, new_line );
+
          text_t *left_node = create_text();
          text_t *right_node = create_text();
          left_node->parent = txt;
@@ -368,6 +377,118 @@ int get_height( text_t *txt )
       return 0;
    }
    return ( get_height( txt->left ) > get_height( txt->right ) ) ? get_height( txt->left ) + 1 : get_height( txt->right ) + 1;
+}
+
+/*
+ * Here I am returning a new text_t so that branches may be closer in memory to their parents
+ * but it would be interesting to see if it actually makes any difference
+ * */
+text_t *create_four_node( text_t *txt, int index, char *new_line )
+{
+
+   text_t *four_node = create_text();
+   four_node->parent = txt->parent;
+
+   if ( index < txt->key_l )
+   {
+      four_node->key_l = index;
+      four_node->line_l = new_line;
+
+      four_node->key_m = txt->key_l;
+      four_node->line_m = txt->line_l;
+
+      four_node->key_r = txt->key_r;
+      four_node->line_r = txt->line_r;
+
+      four_node->right = ( txt->middle == NULL ) ? NULL : txt->middle;
+      four_node->rightmost = ( txt->right == NULL ) ? NULL : txt->right;
+   }
+
+   else if ( index < txt->key_r )
+   {
+      four_node->key_l = txt->key_l;
+      four_node->line_l = txt->line_l;
+
+      four_node->key_m = index;
+      four_node->line_m = new_line;
+
+      four_node->key_r = txt->key_r;
+      four_node->line_r = txt->line_r;
+
+      four_node->left = txt->left;
+      four_node->rightmost = txt->right;
+   }
+
+   else
+   {
+      four_node->key_l = txt->key_l;
+      four_node->line_l = txt->line_l;
+
+      four_node->key_m = txt->key_r;
+      four_node->line_m = txt->line_r;
+
+      four_node->key_r = index;
+      four_node->line_r = new_line;
+
+      four_node->left = txt->left;
+      four_node->middle = txt->middle;
+   }
+
+   free( txt );
+   return four_node;
+}
+
+int get_max_key( text_t *txt )
+{
+   return ( txt->key_r == 0 ) ? txt->key_l : txt->key_r;
+}
+
+text_t *reset_four_node( text_t *txt )
+{
+   text_t *normal_node = create_text();
+   normal_node->parent = txt->parent;
+
+   if ( txt->key_l != 0 )
+   {
+      normal_node->key_l = txt->key_l;
+      normal_node->line_l = txt->line_l;
+
+      normal_node->left = txt->left;
+
+      if ( txt->key_m == 0 )
+      {
+         normal_node->key_r = txt->key_m;
+         normal_node->line_r = txt->line_m;
+      }
+
+      else
+      {
+         normal_node->key_r = txt->key_r;
+         normal_node->line_r = txt->line_r;
+      }
+
+      if ( txt->rightmost != NULL )
+      {
+         normal_node->right = txt->rightmost;
+      }
+
+      else
+      {
+
+      }
+   }
+
+   else if ( txt->key_m != 0 )
+   {
+
+   }
+
+   else {
+
+   }
+
+   free( txt );
+   return normal_node;
 }
 
 int minimum( int key_a, int key_b, int key_c )
