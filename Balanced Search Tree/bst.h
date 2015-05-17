@@ -19,34 +19,18 @@ typedef struct text
    struct text *parent;
 } text_t;
 
-text_t *create_text(void);
-
-int length_text( text_t *txt );
+text_t *create_text( void );
 
 char *get_line( text_t *txt, int index );
-
-void append_line( text_t *txt, char *new_line );
 
 char *set_line( text_t *txt, int index, char *new_line );
 
 void insert_line( text_t *txt, int index, char *new_line );
 
+void append_line( text_t *txt, char *new_line );
+
 char *delete_line( text_t *txt, int index );
 
-text_t *get_node(void);
-
-text_t *search_tree( text_t *txt, int index );
-
-int is_empty( text_t *txt );
-
-int get_height( text_t *txt );
-
-void insert_into_single_three_node( text_t *txt, int index, char *new_line );
-
-void insert_into_three_node_under_two_node( text_t *txt, int index, char *new_line );
-
-void insert_into_three_node_under_three_node( text_t *txt, int index, char *new_line );
-
-void insert_into_root_with_children( text_t *txt, int index, char *new_line );
+int length_text( text_t *txt );
 
 #endif // BST_H_

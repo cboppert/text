@@ -16,6 +16,16 @@ int minimum( int key_a, int key_b, int key_c );
 int maximum( int key_a, int key_b, int key_c );
 int middle( int key_a, int key_b, int key_c );
 
+text_t *get_node(void);
+text_t *search_tree( text_t *txt, int index );
+int is_empty( text_t *txt );
+int get_height( text_t *txt );
+
+void insert_into_single_three_node( text_t *txt, int index, char *new_line );
+void insert_into_three_node_under_two_node( text_t *txt, int index, char *new_line );
+void insert_into_three_node_under_three_node( text_t *txt, int index, char *new_line );
+void insert_into_root_with_children( text_t *txt, int index, char *new_line );
+
 text_t *create_text(void)
 {
    text_t *txt;

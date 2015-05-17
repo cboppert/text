@@ -33,12 +33,4 @@ void insert_line( text_t *txt, int index, char *new_line );
 
 char *delete_line( text_t *txt, int index );
 
-text_t *get_node(void);
-
-text_t *search_tree( text_t *txt, int index );
-
-int is_empty( text_t *txt );
-
-int get_height( text_t *txt );
-
 #endif // BST_H_
