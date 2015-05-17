@@ -185,6 +185,7 @@ void insert_line( text_t *txt, int index, char * new_line )
 }
 
 
+/* Equals cases covered before this is called */
 void insert_into_single_three_node( text_t *txt, int index, char *new_line )
 {
          text_t *left_node = create_text();
@@ -221,12 +222,18 @@ void insert_into_single_three_node( text_t *txt, int index, char *new_line )
             left_node->key_l = txt->key_l;
             left_node->line_l = txt->line_l;
 
+            txt->key_l = txt->key_r;
+            txt->line_l = txt->line_r;
+
             right_node->key_l = index;
             right_node->line_l = new_line;
             printf("9 l-k-l: %d l-k-r: %d r-k-l: %d r-k-r: %d \n", left_node->key_l, left_node->key_r, right_node->key_l, right_node->key_r);
 
          }
       printf("10\n");
+
+         txt->left = left_node;
+         txt->right = right_node;
          txt->key_r = 0;
          txt->line_r = NULL;
 }
