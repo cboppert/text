@@ -41,4 +41,12 @@ int is_empty( text_t *txt );
 
 int get_height( text_t *txt );
 
+void insert_into_single_three_node( text_t *txt, int index, char *new_line );
+
+void insert_into_three_node_under_two_node( text_t *txt, int index, char *new_line );
+
+void insert_into_three_node_under_three_node( text_t *txt, int index, char *new_line );
+
+void insert_into_root_with_children( text_t *txt, int index, char *new_line );
+
 #endif // BST_H_

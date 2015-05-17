@@ -12,12 +12,8 @@
 #include <stdlib.h>
 #include "bst.h"
 
-void call_test_functions(void);
-
 int main()
 {
-   call_test_functions();
-
    int i, tmp; text_t *txt1, *txt2, *txt3; char *c;
    printf("starting \n");
    txt1 = create_text();
@@ -91,25 +87,4 @@ int main()
    {  printf("Test 9: length should be 500000, is %d\n", tmp); exit(-1);
    }
    printf("End of tests\n");
-}
-
-void call_test_functions(void)
-{
-   printf("Start\n");
-
-   text_t *txt;
-   txt = create_text();
-   printf("Text created\n");
-
-   if ( get_height( txt ) != 0 )
-   {
-      printf("Test 1: Height of newly created tree should be 0\n"); exit(-1);
-   }
-   printf("Text one run\n");
-
-   if ( txt->left == NULL )
-   {
-      printf("It's null off the bat.\n");
-   }
-
 }

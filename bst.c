@@ -85,68 +85,112 @@ void insert_line( text_t *txt, int index, char * new_line )
    text_t *bst = search_tree( txt, index );
 
    //Empty tree
-   if ( txt->key_l == 0 )
+   if ( bst->key_l == 0 )
    {
       printf("1 key_l: %d\n", index);
-      txt->key_l = index;
-      txt->line_l = new_line;
+      bst->key_l = index;
+      bst->line_l = new_line;
    }
 
    //Right node is empty
-   else if ( txt->key_r == 0 )
+   else if ( bst->key_r == 0 )
    {
-      if ( txt->key_l < index )
-      {      printf("2, key_l: %d  index: %d \n", txt->key_l, index);
+      if ( bst->key_l < index )
+      {      printf("2, key_l: %d  index: %d \n", bst->key_l, index);
 
-         txt->key_r = index;
-         txt->line_r = new_line;
+         bst->key_r = index;
+         bst->line_r = new_line;
+
+         if ( bst->right != NULL && bst->right->key_l < index )
+         {
+            bst->middle = bst->right;
+            bst->right = NULL;
+         }
       }
 
-      else if ( txt->key_l == index )
+      else if ( bst->key_l == index )
       {      printf("3\n");
 
-         char *temp = txt->line_l;
-         txt->line_l = new_line;
-         insert_line( txt, index + 1, temp );
+         char *temp = bst->line_l;
+         bst->line_l = new_line;
+         insert_line( bst, index + 1, temp );
       }
 
-      else if ( txt->key_l > index )
+      else if ( bst->key_l > index )
       {      printf("4\n");
 
-         txt->key_r = txt->key_l;
-         txt->key_l = index;
-         txt->line_r = txt->line_l;
-         txt->line_l = new_line;
+         bst->key_r = bst->key_l;
+         bst->key_l = index;
+         bst->line_r = bst->line_l;
+         bst->line_l = new_line;
+
+         if ( bst->left != NULL )
+         {
+            bst->middle = bst->left;
+            bst->left = NULL;
+         }
       }
    }
 
    //Parent is empty and 3 node
-   else if ( txt->parent == NULL )
+   else if ( bst->parent == NULL )
    {
-      if ( index == txt->key_l )
+      if ( index == bst->key_l )
       {      printf("5\n");
 
-         char *temp = txt->line_l;
-         txt->line_l = new_line;
-         insert_line( txt, index + 1, temp );
+         char *temp = bst->line_l;
+         bst->line_l = new_line;
+         insert_line( bst, index + 1, temp );
       }
 
-      else if ( index == txt->key_r )
-      {      printf("6 index/txt->key_r: %d \n", index);
+      else if ( index == bst->key_r )
+      {      printf("6 index/bst->key_r: %d \n", index);
 
-         char *temp = txt->line_r;
-         txt->line_r = new_line;
-         insert_line( txt, index + 1, temp );
+         char *temp = bst->line_r;
+         bst->line_r = new_line;
+         insert_line( bst, index + 1, temp );
       }
 
       else {
+         if ( bst->left == NULL && bst->middle == NULL && bst->right == NULL)
+         {
+            insert_into_single_three_node( bst, index, new_line );
+         }
+
+         else
+         {
+            insert_into_root_with_children( bst, index, new_line );
+         }
+      }
+   }
+
+   /*  Parent is a 2 nope */
+   else if ( bst->parent->key_r == 0 )
+   {
+      printf("Parent is a two node index: %d \n", index);
+
+      insert_into_three_node_under_two_node( bst, index, new_line );
+   }
+
+   /* parent is a three node */
+   else
+   {
+      printf("Parent is a three node index %d \n", index);
+
+      insert_into_three_node_under_three_node( bst, index, new_line );
+   }
+
+
+   printf("Got to end, index: %d \n", index);
+}
+
+
+void insert_into_single_three_node( text_t *txt, int index, char *new_line )
+{
          text_t *left_node = create_text();
          text_t *right_node = create_text();
          left_node->parent = txt;
          right_node->parent = txt;
-
-         txt->left = left_node;
-         txt->right = right_node;
 
          if ( index < txt->key_l )
          {      printf("7\n");
@@ -185,25 +229,49 @@ void insert_line( text_t *txt, int index, char * new_line )
       printf("10\n");
          txt->key_r = 0;
          txt->line_r = NULL;
-         txt->right = NULL;
+}
+
+void insert_into_three_node_under_two_node( text_t *txt, int index, char *new_line )
+{
+   text_t *new_node = create_text();
+
+   /* all keys are lower than parents */
+   if ( txt->parent->left == txt )
+   {
+      /* == possibilities already accounted for */
+      if ( index < txt->key_l )
+      {
+
+      }
+
+      else if ( index < txt->key_r )
+      {
+
+      }
+
+      else
+      {
+
       }
    }
 
-   /*  Parent is a 2 nope */
-   else if ( txt->parent->key_r == 0 )
-   {
-      printf("Parent is a two node index: %d \n", index);
-   }
-
-   /* parent is a three node */
+   /* all keys are greater than parents */
    else
    {
-      printf("Parent is a three node index %d \n", index);
+      printf("something here index %d \n", index);
 
    }
+}
 
+void insert_into_three_node_under_three_node( text_t *txt, int index, char *new_line )
+{
+   printf("insert into three under three, index: %d \n", index);
+}
 
-   printf("Got to end, index: %d \n", index);
+void insert_into_root_with_children( text_t *txt, int index, char *new_line )
+{
+
+   printf("insert into root with children, index: %d \n", index);
 }
 
 char * delete_line( text_t *txt, int index )
