@@ -209,10 +209,25 @@ void insert_into_single_three_node( text_t *txt, int index, char *new_line )
 
          text_t *left_node = create_text();
          text_t *right_node = create_text();
-         left_node->parent = txt;
-         right_node->parent = txt;
 
-         if ( index < txt->key_l )
+         left_node->key_l = four_node->key_l;
+         left_node->line_l = four_node->line_l;
+
+         four_node->key_l = 0;
+
+         right_node->key_l = four_node->key_r;
+         right_node->line_l = four_node->line_r;
+
+         four_node->key_r = 0;
+
+         text_t *root = reset_four_node( four_node );
+
+         left_node->parent = root;
+         right_node->parent = root;
+
+         txt = root;
+
+/*         if ( index < txt->key_l )
          {      printf("7\n");
 
             left_node->key_l = index;
@@ -254,7 +269,7 @@ void insert_into_single_three_node( text_t *txt, int index, char *new_line )
          txt->left = left_node;
          txt->right = right_node;
          txt->key_r = 0;
-         txt->line_r = NULL;
+         txt->line_r = NULL; */
 }
 
 void insert_into_three_node_under_two_node( text_t *txt, int index, char *new_line )
