@@ -135,23 +135,7 @@ void insert_line( text_t *txt, int index, char * new_line )
    //Parent is empty and 3 node
    else if ( bst->parent == NULL )
    {
-      if ( index == bst->key_l )
-      {      printf("5\n");
-
-         char *temp = bst->line_l;
-         bst->line_l = new_line;
-         insert_line( bst, index + 1, temp );
-      }
-
-      else if ( index == bst->key_r )
-      {      printf("6 index/bst->key_r: %d \n", index);
-
-         char *temp = bst->line_r;
-         bst->line_r = new_line;
-         insert_line( bst, index + 1, temp );
-      }
-
-      else {
+      if (!check_index_exists( bst, index, new_line ) {
          if ( bst->left == NULL && bst->middle == NULL && bst->right == NULL)
          {
             insert_into_single_three_node( bst, index, new_line );
@@ -185,6 +169,7 @@ void insert_line( text_t *txt, int index, char * new_line )
 }
 
 
+/* This should be refactored to use create four node */
 void insert_into_single_three_node( text_t *txt, int index, char *new_line )
 {
          text_t *left_node = create_text();

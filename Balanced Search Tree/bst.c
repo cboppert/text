@@ -134,7 +134,7 @@ void insert_line( text_t *txt, int index, char *new_line )
 
          char *temp = bst->line_l;
          bst->line_l = new_line;
-         insert_line( bst, index + 1, temp );
+         insert_line( bst->parent == NULL ? bst : bst->parent , index + 1, temp );
       }
 
       else if ( bst->key_l > index )
@@ -295,8 +295,8 @@ void insert_into_root_with_children( text_t *txt )
    left_node->parent = txt;
    right_node->parent = txt;
 
-   txt->parent->left = left_node;
-   txt->parent->right = right_node;
+   txt->left = left_node;
+   txt->right = right_node;
 
    left_node->key_l = txt->key_l;
    left_node->line_l = txt->line_l;
@@ -460,7 +460,7 @@ int check_for_index_exists( text_t *txt, int index, char *new_line )
    {      printf("5\n");
       char *temp = txt->line_l;
       txt->line_l = new_line;
-      insert_line( txt, index + 1, temp );
+      insert_line( txt->parent == NULL ? txt : txt->parent, index + 1, temp );
       return 1;
    }
 
@@ -468,7 +468,7 @@ int check_for_index_exists( text_t *txt, int index, char *new_line )
    {      printf("6 index/bst->key_r: %d \n", index);
       char *temp = txt->line_r;
       txt->line_r = new_line;
-      insert_line( txt, index + 1, temp );
+      insert_line( txt->parent == NULL ? txt : txt->parent, index + 1, temp );
       return 1;
    }
 
