@@ -16,19 +16,23 @@ int minimum( int key_a, int key_b, int key_c );
 int maximum( int key_a, int key_b, int key_c );
 int middle( int key_a, int key_b, int key_c );
 int get_max_key( text_t *txt );
+int check_for_index_exists( text_t *txt, int index, char *new_line );
 
 text_t *get_node(void);
 text_t *search_tree( text_t *txt, int index );
 int is_empty( text_t *txt );
 int get_height( text_t *txt );
 
-void insert_into_single_three_node( text_t *txt, int index, char *new_line );
-void insert_into_three_node_under_two_node( text_t *txt, int index, char *new_line );
-void insert_into_three_node_under_three_node( text_t *txt, int index, char *new_line );
-void insert_into_root_with_children( text_t *txt, int index, char *new_line );
+void insert_into_single_three_node( text_t *txt );
+void insert_into_three_node_under_two_node( text_t *txt );
+void insert_into_three_node_under_three_node( text_t *txt );
+void insert_into_root_with_children( text_t *txt );
+void parent_switch( text_t *txt );
+void split_the_root( text_t *txt );
 
-text_t *create_four_node( text_t *txt, int index, char *new_line );
-text_t *reset_four_node( text_t *txt );
+void create_four_node( text_t *txt, int index, char *new_line );
+void reset_four_node( text_t *txt );
+void swap_trees( text_t *txt, text_t *new );
 
 text_t *create_text(void)
 {
@@ -97,14 +101,14 @@ char *set_line( text_t *txt, int index, char * new_line )
    return NULL;
 }
 
-void insert_line( text_t *txt, int index, char * new_line )
+void insert_line( text_t *txt, int index, char *new_line )
 {
    text_t *bst = search_tree( txt, index );
 
    //Empty tree
    if ( bst->key_l == 0 )
    {
-      printf("1 key_l: %d\n", index);
+      printf("1 key_l: %d \n", index);
       bst->key_l = index;
       bst->line_l = new_line;
    }
@@ -113,7 +117,7 @@ void insert_line( text_t *txt, int index, char * new_line )
    else if ( bst->key_r == 0 )
    {
       if ( bst->key_l < index )
-      {      printf("2, key_l: %d  index: %d \n", bst->key_l, index);
+      {      printf("2, key_l: %d index: %d \n", bst->key_l, index);
 
          bst->key_r = index;
          bst->line_r = new_line;
@@ -152,31 +156,18 @@ void insert_line( text_t *txt, int index, char * new_line )
    //Parent is empty and 3 node
    else if ( bst->parent == NULL )
    {
-      if ( index == bst->key_l )
-      {      printf("5\n");
-
-         char *temp = bst->line_l;
-         bst->line_l = new_line;
-         insert_line( bst, index + 1, temp );
-      }
-
-      else if ( index == bst->key_r )
-      {      printf("6 index/bst->key_r: %d \n", index);
-
-         char *temp = bst->line_r;
-         bst->line_r = new_line;
-         insert_line( bst, index + 1, temp );
-      }
-
-      else {
+      if (!check_for_index_exists( bst, index, new_line ))
+      {
          if ( bst->left == NULL && bst->middle == NULL && bst->right == NULL)
          {
-            insert_into_single_three_node( bst, index, new_line );
+            create_four_node( bst, index, new_line );
+            insert_into_single_three_node( bst );
          }
 
          else
          {
-            insert_into_root_with_children( bst, index, new_line );
+            create_four_node( bst, index, new_line );
+            insert_into_root_with_children( bst );
          }
       }
    }
@@ -185,132 +176,137 @@ void insert_line( text_t *txt, int index, char * new_line )
    else if ( bst->parent->key_r == 0 )
    {
       printf("Parent is a two node index: %d \n", index);
-
-      insert_into_three_node_under_two_node( bst, index, new_line );
+      if ( !check_for_index_exists( bst, index, new_line ))
+      {
+         create_four_node( bst, index, new_line );
+         insert_into_three_node_under_two_node( bst );
+      }
    }
 
    /* parent is a three node */
    else
    {
       printf("Parent is a three node index %d \n", index);
+      create_four_node( bst, index, new_line );
 
-      insert_into_three_node_under_three_node( bst, index, new_line );
+      printf("four node created. bst->key_l: %d bst->key_m: %d bst->key_r: %d \n", bst->key_l, bst->key_m, bst->key_r);
+      insert_into_three_node_under_three_node( bst );
    }
 
 
-   printf("Got to end, index: %d \n", index);
+   printf("Got to end of insert, index: %d \n", index);
 }
 
-
 /* Equals cases covered before this is called */
-void insert_into_single_three_node( text_t *txt, int index, char *new_line )
+void insert_into_single_three_node( text_t *txt )
 {
-         text_t *four_node = create_four_node( txt, index, new_line );
-
          text_t *left_node = create_text();
          text_t *right_node = create_text();
 
-         left_node->key_l = four_node->key_l;
-         left_node->line_l = four_node->line_l;
+         left_node->key_l = txt->key_l;
+         left_node->line_l = txt->line_l;
 
-         four_node->key_l = 0;
+         txt->key_l = 0;
 
-         right_node->key_l = four_node->key_r;
-         right_node->line_l = four_node->line_r;
+         right_node->key_l = txt->key_r;
+         right_node->line_l = txt->line_r;
 
-         four_node->key_r = 0;
+         txt->key_r = 0;
 
-         text_t *root = reset_four_node( four_node );
+         reset_four_node( txt );
 
-         left_node->parent = root;
-         right_node->parent = root;
-
-         txt = root;
-
-/*         if ( index < txt->key_l )
-         {      printf("7\n");
-
-            left_node->key_l = index;
-            left_node->line_l = new_line;
-
-            right_node->key_l = txt->key_r;
-            right_node->line_l = txt->line_r;
-         }
-
-         else if ( index < txt->key_r )
-         {      printf("8\n");
-
-            left_node->key_l = txt->key_l;
-            left_node->line_l = txt->line_l;
-
-            right_node->key_l = txt->key_r;
-            right_node->line_l = txt->line_r;
-
-            txt->key_l = index;
-            txt->line_l = new_line;
-         }
-
-         else
-         {      printf("9 l-k-l: %d l-k-r: %d r-k-l: %d r-k-r: %d \n", left_node->key_l, left_node->key_r, right_node->key_l, right_node->key_r);
-
-            left_node->key_l = txt->key_l;
-            left_node->line_l = txt->line_l;
-
-            txt->key_l = txt->key_r;
-            txt->line_l = txt->line_r;
-
-            right_node->key_l = index;
-            right_node->line_l = new_line;
-            printf("9 l-k-l: %d l-k-r: %d r-k-l: %d r-k-r: %d \n", left_node->key_l, left_node->key_r, right_node->key_l, right_node->key_r);
-
-         }
-      printf("10\n");
+         left_node->parent = txt;
+         right_node->parent = txt;
 
          txt->left = left_node;
          txt->right = right_node;
-         txt->key_r = 0;
-         txt->line_r = NULL; */
+
+         printf("insert into single three node finish \n");
 }
 
-void insert_into_three_node_under_two_node( text_t *txt, int index, char *new_line )
+void parent_switch( text_t *txt )
 {
-   text_t *new_node = create_text();
+   printf("insert into parent switch\n");
 
-   /* all keys are lower than parents */
-   if ( txt->parent->left == txt )
+   if ( txt->parent == NULL )
    {
-      /* == possibilities already accounted for */
-      if ( index < txt->key_l )
-      {
-
-      }
-
-      else if ( index < txt->key_r )
-      {
-
-      }
-
-      else
-      {
-
-      }
+      insert_into_root_with_children( txt );
    }
 
-   /* all keys are greater than parents */
+   else if ( txt-> parent->key_r == 0 )
+   {
+      insert_into_three_node_under_two_node( txt );
+   }
+
    else
    {
-
+      insert_into_three_node_under_three_node( txt );
    }
 }
 
-void insert_into_three_node_under_three_node( text_t *txt, int index, char *new_line )
+void split_the_root( text_t *txt )
 {
+   printf("split the root\n");
 
 }
 
-void insert_into_root_with_children( text_t *txt, int index, char *new_line )
+void insert_into_three_node_under_two_node( text_t *txt )
 {
+   txt->parent->key_r = txt->key_m;
+   txt->parent->line_r = txt->line_m;
+   txt->key_m = 0;
 
+   text_t *right_node = create_text();
+   right_node->parent = txt->parent;
+
+   right_node->key_l = txt->key_r;
+   right_node->line_l = txt->line_r;
+   txt->key_r = 0;
+
+   txt->parent->right = right_node;
+
+   reset_four_node( txt );
+   txt->parent->left = txt;
+}
+
+void insert_into_three_node_under_three_node( text_t *txt )
+{
+   create_four_node( txt->parent, txt->key_m, txt->line_m );
+   txt->key_m = 0;
+
+   text_t *middle = create_text();
+   middle->parent = txt->parent;
+
+   middle->key_l = txt->key_r;
+   middle->line_l = txt->line_r;
+   txt->key_r = 0;
+
+   txt->parent->middle = middle;
+
+   reset_four_node( txt );
+   parent_switch( txt->parent );
+}
+
+void insert_into_root_with_children( text_t *txt )
+{
+   text_t *left_node = create_text();
+   text_t *right_node = create_text();
+
+   left_node->parent = txt;
+   right_node->parent = txt;
+
+   txt->parent->left = left_node;
+   txt->parent->right = right_node;
+
+   left_node->key_l = txt->key_l;
+   left_node->line_l = txt->line_l;
+   txt->key_l = 0;
+
+   right_node->key_l = txt->key_r;
+   right_node->line_l = txt->line_r;
+   txt->key_r = 0;
+
+   reset_four_node( txt );
 }
 
 char * delete_line( text_t *txt, int index )
@@ -398,7 +394,7 @@ int get_height( text_t *txt )
  * Here I am returning a new text_t so that branches may be closer in memory to their parents
  * but it would be interesting to see if it actually makes any difference
  * */
-text_t *create_four_node( text_t *txt, int index, char *new_line )
+void create_four_node( text_t *txt, int index, char *new_line )
 {
 
    text_t *four_node = create_text();
@@ -449,8 +445,8 @@ text_t *create_four_node( text_t *txt, int index, char *new_line )
       four_node->middle = txt->middle;
    }
 
-   free( txt );
-   return four_node;
+   swap_trees( txt, four_node );
+   free ( four_node );
 }
 
 int get_max_key( text_t *txt )
@@ -458,7 +454,28 @@ int get_max_key( text_t *txt )
    return ( txt->key_r == 0 ) ? txt->key_l : txt->key_r;
 }
 
-text_t *reset_four_node( text_t *txt )
+int check_for_index_exists( text_t *txt, int index, char *new_line )
+{
+   if ( index == txt->key_l )
+   {      printf("5\n");
+      char *temp = txt->line_l;
+      txt->line_l = new_line;
+      insert_line( txt, index + 1, temp );
+      return 1;
+   }
+
+   else if ( index == txt->key_r )
+   {      printf("6 index/bst->key_r: %d \n", index);
+      char *temp = txt->line_r;
+      txt->line_r = new_line;
+      insert_line( txt, index + 1, temp );
+      return 1;
+   }
+
+   return 0;
+}
+
+void reset_four_node( text_t *txt )
 {
    text_t *normal_node = create_text();
    normal_node->parent = txt->parent;
@@ -528,8 +545,25 @@ text_t *reset_four_node( text_t *txt )
       normal_node->right = txt->rightmost;
    }
 
-   free( txt );
-   return normal_node;
+   swap_trees( txt, normal_node );
+   free ( normal_node );
+}
+
+/* This should be refactored out but it'd make the four node methods really ugly with lots of temp variables currently */
+void swap_trees( text_t *txt, text_t *new )
+{
+   txt->key_l = new->key_l;
+   txt->key_m = new->key_m;
+   txt->key_r = new->key_r;
+
+   txt->line_l = new->line_l;
+   txt->line_m = new->line_m;
+   txt->line_r = new->line_r;
+
+   txt->left = new->left;
+   txt->middle = new->middle;
+   txt->right = new->right;
+   txt->rightmost = new->rightmost;
 }
 
 int minimum( int key_a, int key_b, int key_c )
