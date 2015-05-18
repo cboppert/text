@@ -455,36 +455,62 @@ text_t *reset_four_node( text_t *txt )
 
       normal_node->left = txt->left;
 
-      if ( txt->key_m == 0 )
+      if ( txt->key_m != 0 )
       {
          normal_node->key_r = txt->key_m;
          normal_node->line_r = txt->line_m;
+
+         normal_node->middle = txt->middle;
+
+         normal_node->right = ( txt->right != NULL ) ? txt->right : txt->rightmost;
       }
 
-      else
+      else if ( txt->key_r != 0 )
       {
          normal_node->key_r = txt->key_r;
          normal_node->line_r = txt->line_r;
-      }
 
-      if ( txt->rightmost != NULL )
-      {
+         normal_node->middle = ( txt->middle != NULL ) ? txt->middle : txt->right;
+
          normal_node->right = txt->rightmost;
       }
 
       else
       {
-
+         normal_node->right = ( txt->middle != NULL ) ? txt->middle : ( txt->right != NULL ) ? txt->right : txt->rightmost;
       }
    }
 
    else if ( txt->key_m != 0 )
    {
+      normal_node->key_l = txt->key_m;
+      normal_node->line_l = txt->line_m;
 
+      normal_node->left = ( txt->left != NULL ) ? txt->left : txt->middle;
+
+      if ( txt->key_r != 0 )
+      {
+         normal_node->key_r = txt->key_r;
+         normal_node->line_r = txt->line_r;
+
+         normal_node->middle = txt->right;
+
+         normal_node->right = txt->rightmost;
+      }
+
+      else
+      {
+         normal_node->right = ( txt->right != NULL ) ? txt->right : txt->rightmost;
+      }
    }
 
-   else {
+   else
+   {
+      normal_node->key_l = txt->key_r;
+      normal_node->line_l = txt->line_r;
 
+      normal_node->left = ( txt->left == NULL ) ? txt->left : ( txt->middle == NULL ) ? txt->middle : txt->right;
+      normal_node->right = txt->rightmost;
    }
 
    free( txt );
