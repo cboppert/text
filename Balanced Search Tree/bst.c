@@ -266,7 +266,7 @@ void insert_into_three_node_under_two_node( text_t *txt )
    txt->parent->right = right_node;
 
    reset_four_node( txt );
-   txt->parent->left = txt;
+   txt->parent->middle = txt;
 }
 
 void insert_into_three_node_under_three_node( text_t *txt )
