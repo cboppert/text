@@ -1,1 +1,6 @@
-app
+main
+.DS_Store
+bst
+*.o
+*.bc
+./Balanced\ Search\ Tree/Balanced\ Search\ Tree.xcodeproj
