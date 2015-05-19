@@ -187,10 +187,13 @@ void insert_line( text_t *txt, int index, char *new_line )
    else
    {
       printf("Parent is a three node index %d \n", index);
-      create_four_node( bst, index, new_line );
+      if ( !check_for_index_exists( bst, index, new_line ) )
+      {
+         create_four_node( bst, index, new_line );
 
-      printf("four node created. bst->key_l: %d bst->key_m: %d bst->key_r: %d \n", bst->key_l, bst->key_m, bst->key_r);
-      insert_into_three_node_under_three_node( bst );
+         printf("four node created. bst->key_l: %d bst->key_m: %d bst->key_r: %d \n", bst->key_l, bst->key_m, bst->key_r);
+         insert_into_three_node_under_three_node( bst );
+      }
    }
 
 
@@ -213,6 +216,11 @@ void insert_into_single_three_node( text_t *txt )
 
          txt->key_r = 0;
 
+         left_node->left = ( txt->left != NULL ) ? txt->left : NULL;
+         left_node->right = ( txt->middle != NULL ) ? txt->middle : NULL;
+         right_node->left = ( txt->right != NULL ) ? txt->right : NULL;
+         right_node->right = ( txt->rightmost != NULL ) ? txt->rightmost : NULL;
+
          reset_four_node( txt );
 
          left_node->parent = txt;
@@ -230,7 +238,8 @@ void parent_switch( text_t *txt )
 
    if ( txt->parent == NULL )
    {
-      insert_into_root_with_children( txt );
+      //insert_into_root_with_children( txt );
+      insert_into_single_three_node( txt );
    }
 
    else if ( txt-> parent->key_r == 0 )
@@ -247,6 +256,8 @@ void parent_switch( text_t *txt )
 void split_the_root( text_t *txt )
 {
    printf("split the root\n");
+
+   insert_into_single_three_node( txt );
 
 }
 
@@ -274,14 +285,15 @@ void insert_into_three_node_under_three_node( text_t *txt )
    create_four_node( txt->parent, txt->key_m, txt->line_m );
    txt->key_m = 0;
 
-   text_t *middle = create_text();
-   middle->parent = txt->parent;
+   text_t *rightmost = create_text();
+   rightmost->parent = txt->parent;
 
-   middle->key_l = txt->key_r;
-   middle->line_l = txt->line_r;
+   rightmost->key_l = txt->key_r;
+   rightmost->line_l = txt->line_r;
    txt->key_r = 0;
 
-   txt->parent->middle = middle;
+   txt->parent->right = txt;
+   txt->parent->rightmost = rightmost;
 
    reset_four_node( txt );
    parent_switch( txt->parent );
