@@ -288,6 +288,16 @@ void insert_into_three_node_under_two_node( text_t *txt )
    right_node->line_l = txt->line_r;
    right_node->left = txt->right;
    right_node->right = txt->rightmost;
+
+   if ( txt->right != NULL )
+   {
+      txt->right->parent = right_node;
+   }
+
+   if ( txt->rightmost != NULL )
+   {
+      txt->rightmost->parent = right_node;
+   }
    txt->key_r = 0;
 
    txt->parent->right = right_node;
