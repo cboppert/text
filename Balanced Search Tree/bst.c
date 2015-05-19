@@ -20,6 +20,7 @@ int check_for_index_exists( text_t *txt, int index, char *new_line );
 
 text_t *get_node(void);
 text_t *search_tree( text_t *txt, int index );
+text_t *find_root( text_t *txt );
 int is_empty( text_t *txt );
 int get_height( text_t *txt );
 
@@ -134,7 +135,7 @@ void insert_line( text_t *txt, int index, char *new_line )
 
          char *temp = bst->line_l;
          bst->line_l = new_line;
-         insert_line( bst->parent == NULL ? bst : bst->parent , index + 1, temp );
+         insert_line( find_root( txt ), index + 1, temp );
       }
 
       else if ( bst->key_l > index )
@@ -198,6 +199,11 @@ void insert_line( text_t *txt, int index, char *new_line )
 
 
    printf("Got to end of insert, index: %d \n", index);
+}
+
+text_t *find_root( text_t *txt )
+{
+   return ( txt->parent != NULL ) ? find_root( txt->parent ) : txt;
 }
 
 /* Equals cases covered before this is called */
@@ -285,18 +291,45 @@ void insert_into_three_node_under_three_node( text_t *txt )
    create_four_node( txt->parent, txt->key_m, txt->line_m );
    txt->key_m = 0;
 
-   text_t *rightmost = create_text();
-   rightmost->parent = txt->parent;
+   text_t *parent = txt->parent;
 
+   text_t *left = create_text();
+   left->key_l = parent->key_l;
+   left->line_l = parent->line_l;
+   left->parent = parent;
+
+   parent->left->parent = left;
+   parent->middle->parent = left;
+
+   left->left = parent->left;
+   left->right = parent->middle;
+
+   parent->left = left;
+   parent->key_l = 0;
+
+
+   text_t *right = create_text();
+   right->key_l = parent->key_r;
+   right->line_l = parent->line_r;
+   right->parent = parent;
+
+   txt->parent = right;
+
+   text_t *rightmost = create_text();
    rightmost->key_l = txt->key_r;
    rightmost->line_l = txt->line_r;
+   rightmost->parent = right;
+
    txt->key_r = 0;
 
-   txt->parent->right = txt;
-   txt->parent->rightmost = rightmost;
+   right->left = txt;
+   right->right = rightmost;
 
-   reset_four_node( txt );
-   parent_switch( txt->parent );
+   parent->right = right;
+
+   parent->key_r = 0;
+
+   reset_four_node( parent );
 }
 
 void insert_into_root_with_children( text_t *txt )
@@ -472,7 +505,7 @@ int check_for_index_exists( text_t *txt, int index, char *new_line )
    {      printf("5\n");
       char *temp = txt->line_l;
       txt->line_l = new_line;
-      insert_line( txt->parent == NULL ? txt : txt->parent, index + 1, temp );
+      insert_line( find_root( txt ), index + 1, temp );
       return 1;
    }
 
@@ -480,7 +513,7 @@ int check_for_index_exists( text_t *txt, int index, char *new_line )
    {      printf("6 index/bst->key_r: %d \n", index);
       char *temp = txt->line_r;
       txt->line_r = new_line;
-      insert_line( txt->parent == NULL ? txt : txt->parent, index + 1, temp );
+      insert_line( find_root( txt ), index + 1, temp );
       return 1;
    }
 
