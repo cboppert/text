@@ -286,6 +286,8 @@ void insert_into_three_node_under_two_node( text_t *txt )
 
    right_node->key_l = txt->key_r;
    right_node->line_l = txt->line_r;
+   right_node->left = txt->right;
+   right_node->right = txt->rightmost;
    txt->key_r = 0;
 
    txt->parent->right = right_node;
