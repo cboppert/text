@@ -34,6 +34,8 @@ void split_the_root( text_t *txt );
 void create_four_node( text_t *txt, int index, char *new_line );
 void reset_four_node( text_t *txt );
 void swap_trees( text_t *txt, text_t *new );
+void left_rotation( text_t *txt );
+void right_rotation( text_t *txt );
 
 text_t *create_text(void)
 {
@@ -190,6 +192,11 @@ void insert_line( text_t *txt, int index, char *new_line )
    }
 }
 
+void rebalance_tree( text_t *txt )
+{
+
+}
+
 text_t *find_root( text_t *txt )
 {
    return ( txt->parent != NULL ) ? find_root( txt->parent ) : txt;
@@ -211,10 +218,29 @@ void insert_into_single_three_node( text_t *txt )
 
          txt->key_r = 0;
 
-         left_node->left = ( txt->left != NULL ) ? txt->left : NULL;
-         left_node->right = ( txt->middle != NULL ) ? txt->middle : NULL;
-         right_node->left = ( txt->right != NULL ) ? txt->right : NULL;
-         right_node->right = ( txt->rightmost != NULL ) ? txt->rightmost : NULL;
+         if ( txt->left != NULL )
+         {
+            left_node->left = txt->left;
+            txt->left->parent = left_node;
+         }
+
+         if ( txt->middle != NULL )
+         {
+            left_node->right = txt->middle;
+            txt->middle->parent = left_node;
+         }
+
+         if ( txt->right != NULL )
+         {
+            right_node->left = txt->right;
+            txt->right->parent = right_node;
+         }
+
+         if ( txt->rightmost != NULL )
+         {
+            right_node->right = txt->rightmost;
+            txt->rightmost->parent = right_node;
+         }
 
          reset_four_node( txt );
 
@@ -270,12 +296,35 @@ void insert_into_three_node_under_two_node( text_t *txt )
 
 void insert_into_three_node_under_three_node( text_t *txt )
 {
-   create_four_node( txt->parent, txt->key_m, txt->line_m );
+   text_t *parent = txt->parent;
+   create_four_node( parent, txt->key_m, txt->line_m );
    txt->key_m = 0;
 
-   text_t *parent = txt->parent;
+   text_t *righter_node = create_text();
+   righter_node->key_l = txt->key_r;
+   righter_node->line_l = txt->line_r;
+   righter_node->parent = parent;
+   txt->key_r = 0;
 
-   text_t *left = create_text();
+   if ( txt->key_l < parent->key_l )
+   {
+      parent->left = txt;
+      parent->middle = righter_node;
+   }
+
+   else if ( txt->key_l < parent->key_m )
+   {
+      parent->middle = txt;
+      parent->right = righter_node;
+   }
+
+   else
+   {
+      parent->right = txt;
+      parent->rightmost = righter_node;
+   }
+
+   /*text_t *left = create_text();
    left->key_l = parent->key_l;
    left->line_l = parent->line_l;
    left->parent = parent;
@@ -288,7 +337,6 @@ void insert_into_three_node_under_three_node( text_t *txt )
 
    parent->left = left;
    parent->key_l = 0;
-
 
    text_t *right = create_text();
    right->key_l = parent->key_r;
@@ -311,7 +359,10 @@ void insert_into_three_node_under_three_node( text_t *txt )
 
    parent->key_r = 0;
 
-   reset_four_node( parent );
+   reset_four_node( parent );*/
+   reset_four_node( txt );
+
+   parent_switch( parent );
 }
 
 void insert_into_root_with_children( text_t *txt )
@@ -416,6 +467,12 @@ int get_height( text_t *txt )
  * Here I am returning a new text_t so that branches may be closer in memory to their parents
  * but it would be interesting to see if it actually makes any difference
  * */
+
+/*
+ * Create four node doesn't manage branches below so if less than key_l need to set left and middle
+ * if less than key_r need to set middle and right
+ * and if greater than key_r need to set right and rightmost
+ */
 void create_four_node( text_t *txt, int index, char *new_line )
 {
 
@@ -586,6 +643,16 @@ void swap_trees( text_t *txt, text_t *new )
    txt->middle = new->middle;
    txt->right = new->right;
    txt->rightmost = new->rightmost;
+}
+
+void left_rotation( text_t *txt )
+{
+
+}
+
+void right_rotation( text_t *txt )
+{
+
 }
 
 int minimum( int key_a, int key_b, int key_c )
