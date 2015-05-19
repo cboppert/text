@@ -77,7 +77,6 @@ char *get_line( text_t *txt, int index )
 
 void append_line( text_t *txt, char *new_line )
 {
-   printf("length text: %d \n", length_text( txt ));
    insert_line( txt, length_text( txt ) + 1, new_line);
 }
 
@@ -109,7 +108,6 @@ void insert_line( text_t *txt, int index, char *new_line )
    //Empty tree
    if ( bst->key_l == 0 )
    {
-      printf("1 key_l: %d \n", index);
       bst->key_l = index;
       bst->line_l = new_line;
    }
@@ -118,8 +116,7 @@ void insert_line( text_t *txt, int index, char *new_line )
    else if ( bst->key_r == 0 )
    {
       if ( bst->key_l < index )
-      {      printf("2, key_l: %d index: %d \n", bst->key_l, index);
-
+      {
          bst->key_r = index;
          bst->line_r = new_line;
 
@@ -131,16 +128,14 @@ void insert_line( text_t *txt, int index, char *new_line )
       }
 
       else if ( bst->key_l == index )
-      {      printf("3\n");
-
+      {
          char *temp = bst->line_l;
          bst->line_l = new_line;
          insert_line( find_root( txt ), index + 1, temp );
       }
 
       else if ( bst->key_l > index )
-      {      printf("4\n");
-
+      {
          bst->key_r = bst->key_l;
          bst->key_l = index;
          bst->line_r = bst->line_l;
@@ -176,7 +171,6 @@ void insert_line( text_t *txt, int index, char *new_line )
    /*  Parent is a 2 nope */
    else if ( bst->parent->key_r == 0 )
    {
-      printf("Parent is a two node index: %d \n", index);
       if ( !check_for_index_exists( bst, index, new_line ))
       {
          create_four_node( bst, index, new_line );
@@ -187,18 +181,13 @@ void insert_line( text_t *txt, int index, char *new_line )
    /* parent is a three node */
    else
    {
-      printf("Parent is a three node index %d \n", index);
       if ( !check_for_index_exists( bst, index, new_line ) )
       {
          create_four_node( bst, index, new_line );
 
-         printf("four node created. bst->key_l: %d bst->key_m: %d bst->key_r: %d \n", bst->key_l, bst->key_m, bst->key_r);
          insert_into_three_node_under_three_node( bst );
       }
    }
-
-
-   printf("Got to end of insert, index: %d \n", index);
 }
 
 text_t *find_root( text_t *txt )
@@ -234,14 +223,10 @@ void insert_into_single_three_node( text_t *txt )
 
          txt->left = left_node;
          txt->right = right_node;
-
-         printf("insert into single three node finish \n");
 }
 
 void parent_switch( text_t *txt )
 {
-   printf("insert into parent switch\n");
-
    if ( txt->parent == NULL )
    {
       //insert_into_root_with_children( txt );
@@ -261,10 +246,7 @@ void parent_switch( text_t *txt )
 
 void split_the_root( text_t *txt )
 {
-   printf("split the root\n");
-
    insert_into_single_three_node( txt );
-
 }
 
 void insert_into_three_node_under_two_node( text_t *txt )
@@ -368,20 +350,16 @@ text_t *get_node(void)
 
 int length_text( text_t *txt )
 {
-   printf("Length text called\n");
    if ( txt->right == NULL )
    {
-      printf("txt->right is Null\n");
       return ( txt->key_r == 0 ) ? txt->key_l : txt->key_r;
    }
 
-   printf("txt->right is not null\n");
    return length_text( txt->right );
 }
 
 text_t *search_tree( text_t *txt, int index )
 {
-   printf("index: %d key_l: %d key_r: %d \n", index, txt->key_l, txt->key_r);
    if ( index < txt->key_l )
    {
       return ( txt->left == NULL ) ? txt : search_tree( txt->left, index );
@@ -412,7 +390,6 @@ text_t *search_tree( text_t *txt, int index )
       return ( txt->right == NULL ) ? txt : search_tree( txt->right, index );
    }
 
-   printf("Your get_line method got somewhere it shouldnt't\n");
    return NULL;
 }
 
@@ -502,7 +479,6 @@ int get_max_key( text_t *txt )
 int check_for_index_exists( text_t *txt, int index, char *new_line )
 {
    if ( index == txt->key_l )
-   {      printf("5\n");
       char *temp = txt->line_l;
       txt->line_l = new_line;
       insert_line( find_root( txt ), index + 1, temp );
@@ -510,7 +486,7 @@ int check_for_index_exists( text_t *txt, int index, char *new_line )
    }
 
    else if ( index == txt->key_r )
-   {      printf("6 index/bst->key_r: %d \n", index);
+   {
       char *temp = txt->line_r;
       txt->line_r = new_line;
       insert_line( find_root( txt ), index + 1, temp );
