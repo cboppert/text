@@ -30,7 +30,6 @@ int main()
    insert_line(txt1, 2, "line ninetysix" );
    insert_line(txt1, 2, "line ninetyfive" );
    for( i = 2; i <95; i++ ) {
-      printf("%d %d %d \n", i, i , i);
      insert_line(txt1, 2, "some filler line between 1 and 95" );
    }
    if( (tmp = length_text(txt1)) != 100)

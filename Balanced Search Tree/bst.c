@@ -479,6 +479,7 @@ int get_max_key( text_t *txt )
 int check_for_index_exists( text_t *txt, int index, char *new_line )
 {
    if ( index == txt->key_l )
+   {
       char *temp = txt->line_l;
       txt->line_l = new_line;
       insert_line( find_root( txt ), index + 1, temp );
