@@ -29,13 +29,8 @@ int main()
    insert_line(txt1, 2, "line ninetyseven" );
    insert_line(txt1, 2, "line ninetysix" );
    insert_line(txt1, 2, "line ninetyfive" );
-    int length = 7;
    for( i = 2; i <95; i++ ) {
      insert_line(txt1, 2, "some filler line between 1 and 95" );
-       length++;
-       if ( (tmp = length_text(txt1)) != length)
-       {  printf("Test 2: length should be %d, is %d\n",length, tmp); exit(-1);
-       }
    }
    if( (tmp = length_text(txt1)) != 100)
    {  printf("Test 2: length should be 100, is %d\n", tmp); exit(-1);

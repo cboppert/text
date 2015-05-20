@@ -316,6 +316,18 @@ void insert_into_three_node_under_three_node( text_t *txt )
    righter_node->key_l = txt->key_r;
    righter_node->line_l = txt->line_r;
    righter_node->parent = parent;
+
+   if ( txt->right != NULL )
+   {
+      righter_node->left = txt->right;
+      txt->right->parent = righter_node;
+   }
+
+   if ( txt->rightmost != NULL )
+   {
+      righter_node->right = txt->rightmost;
+      txt->rightmost->parent = righter_node;
+   }
    txt->key_r = 0;
 
    if ( txt->key_l < parent->key_l )
