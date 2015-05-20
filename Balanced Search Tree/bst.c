@@ -411,9 +411,86 @@ void insert_into_root_with_children( text_t *txt )
    reset_four_node( txt );
 }
 
-char * delete_line( text_t *txt, int index )
+char *delete_line( text_t *txt, int index )
 {
-   return NULL;
+   char *deleted_line = get_line( txt, index );
+   if ( deleted_line != NULL )
+   {
+      shift_lines( txt, index );
+   }
+
+   return deleted_line;
+}
+
+void shift_lines( text_t *txt, text_t *current_node, int index )
+{
+   text_t *next_node = search_tree( txt, index + 1 );
+   char *line_to_update = ( current_node->key_l == index ) ? current_node->line_l : current_node->line_r;
+
+   if ( next_node->key_l == index + 1 )
+   {
+      line_to_update = next_node->line_l;
+      shift_lines( txt, next_node, index + 1 );
+   }
+
+   else if ( next_node->key_r == index + 1 )
+   {
+      line_to_update =  next_node->line_r;
+      shift_lines( txt, next_node, index + 1 );
+   }
+
+   /* index is final key */
+   else
+   {
+      if ( current_node->key_r == index )
+      {
+         current_node->key_r = 0;
+         current_node->line_r = NULL;
+
+         current_node->right = ( current_node->middle != NULL ) ? current_node->middle : NULL;
+         current_node->middle = NULL;
+      }
+
+      else
+      {
+         if ( current_node->left != NULL )
+         {
+            text_t *left = current_node->left;
+            left->parent = current_node->parent;
+
+            swap_trees( current_node, left );
+            free( left );
+         }
+
+         else if ( current_node->parent != NULL )
+         {
+            text_t *parent = current_node->parent;
+            if ( parent->left == current_node )
+            {
+               parent->left = NULL;
+            }
+
+            else if ( parent->middle == current_node )
+            {
+               parent->middle = NULL;
+            }
+
+            else
+            {
+               parent->middle = NULL;
+            }
+
+            free ( current_node );
+         }
+
+         /* tree is now empty */
+         else
+         {
+            current_node->key_l = 0;
+            current_node->line_; = NULL;
+         }
+      }
+   }
 }
 
 text_t *get_node(void)
