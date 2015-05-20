@@ -450,11 +450,10 @@ void shift_lines( text_t *txt, text_t *current_node, int index )
       {
          if ( current_node->left != NULL )
          {
-            text_t *left = current_node->left;
-            left->parent = current_node->parent;
-
-            swap_trees( current_node, left );
-            free( left );
+//            text_t **left = &current_node->left;
+             
+            swap_trees( current_node, current_node->left );
+//            free( *left );
          }
 
          else if ( current_node->parent != NULL )
@@ -472,10 +471,10 @@ void shift_lines( text_t *txt, text_t *current_node, int index )
 
             else
             {
-               parent->middle = NULL;
+               parent->right = NULL;
             }
 
-            free ( current_node );
+//            free ( current_node );
          }
 
          /* tree is now empty */
