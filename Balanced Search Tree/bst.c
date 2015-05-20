@@ -34,8 +34,7 @@ void split_the_root( text_t *txt );
 void create_four_node( text_t *txt, int index, char *new_line );
 void reset_four_node( text_t *txt );
 void swap_trees( text_t *txt, text_t *new );
-void left_rotation( text_t *txt );
-void right_rotation( text_t *txt );
+void shift_lines( text_t *txt, text_t *current_node, int index );
 
 text_t *create_text(void)
 {
@@ -190,11 +189,6 @@ void insert_line( text_t *txt, int index, char *new_line )
          insert_into_three_node_under_three_node( bst );
       }
    }
-}
-
-void rebalance_tree( text_t *txt )
-{
-
 }
 
 text_t *find_root( text_t *txt )
@@ -413,10 +407,11 @@ void insert_into_root_with_children( text_t *txt )
 
 char *delete_line( text_t *txt, int index )
 {
-   char *deleted_line = get_line( txt, index );
+   text_t *current_node = search_tree( txt, index );
+   char *deleted_line = get_line( current_node, index );
    if ( deleted_line != NULL )
    {
-      shift_lines( txt, index );
+      shift_lines( txt, current_node, index );
    }
 
    return deleted_line;
@@ -425,17 +420,17 @@ char *delete_line( text_t *txt, int index )
 void shift_lines( text_t *txt, text_t *current_node, int index )
 {
    text_t *next_node = search_tree( txt, index + 1 );
-   char *line_to_update = ( current_node->key_l == index ) ? current_node->line_l : current_node->line_r;
+   char **line_to_update = ( current_node->key_l == index ) ? &current_node->line_l : &current_node->line_r;
 
    if ( next_node->key_l == index + 1 )
    {
-      line_to_update = next_node->line_l;
+      *line_to_update = next_node->line_l;
       shift_lines( txt, next_node, index + 1 );
    }
 
    else if ( next_node->key_r == index + 1 )
    {
-      line_to_update =  next_node->line_r;
+      *line_to_update =  next_node->line_r;
       shift_lines( txt, next_node, index + 1 );
    }
 
@@ -487,7 +482,7 @@ void shift_lines( text_t *txt, text_t *current_node, int index )
          else
          {
             current_node->key_l = 0;
-            current_node->line_; = NULL;
+            current_node->line_l = NULL;
          }
       }
    }
@@ -744,16 +739,6 @@ void swap_trees( text_t *txt, text_t *new )
    txt->middle = new->middle;
    txt->right = new->right;
    txt->rightmost = new->rightmost;
-}
-
-void left_rotation( text_t *txt )
-{
-
-}
-
-void right_rotation( text_t *txt )
-{
-
 }
 
 int minimum( int key_a, int key_b, int key_c )
